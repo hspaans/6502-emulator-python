@@ -1,9 +1,9 @@
 """
-SEI - Set Interrupt Disable.
+PHP - Push Processor Status.
 
-I = 1
+Pushes a copy of the status flags on to the stack.
 
-Sets the interrupt disable flag to zero.
+Processor Status after use:
 
 +------+-------------------+--------------+
 | Flag | Description       | State        |
@@ -12,7 +12,7 @@ Sets the interrupt disable flag to zero.
 +------+-------------------+--------------+
 |  Z   | Zero Flag         | Not affected |
 +------+-------------------+--------------+
-|  I   | Interrupt Disable | Set to 1     |
+|  I   | Interrupt Disable | Not affected |
 +------+-------------------+--------------+
 |  D   | Decimal Mode Flag | Not affected |
 +------+-------------------+--------------+
@@ -26,29 +26,25 @@ Sets the interrupt disable flag to zero.
 +-----------------+--------+-------+--------+
 | Addressing Mode | Opcode | Bytes | Cycles |
 +=================+========+=======+========+
-| Implied         |  0x78  |   1   |   2    |
+| Implied         |  0x08  |   1   |   3    |
 +-----------------+--------+-------+--------+
 
-See also: CLI
+See also: PLP
 """
 import m6502
 
 
-def test_cpu_ins_sei_imp() -> None:
+def test_cpu_ins_php_imp() -> None:
     """
-    Set Interrupt Disable.
+    Push Accumulator, Implied.
+
+    TODO: Implement instruction and test
+    TODO: Add check to not cross page
 
     return: None
     """
     memory = m6502.Memory()
     cpu = m6502.Processor(memory)
     cpu.reset()
-    cpu.flag_i = False
-    memory[0xFCE2] = 0x78
-    cpu.execute(2)
-    assert (
-        cpu.program_counter,
-        cpu.stack_pointer,
-        cpu.cycles,
-        cpu.flag_i,
-    ) == (0xFCE3, 0x01FD, 2, True)
+    memory[0xFCE2] = 0x08
+    assert True
