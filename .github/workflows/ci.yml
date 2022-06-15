@@ -129,3 +129,6 @@ jobs:
 
       - name: 'Dependency Review'
         uses: actions/dependency-review-action@v2
+        with:
+          fail-on-severity: high
+          deny-licenses: AGPL-1.0-or-later
