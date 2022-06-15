@@ -8,6 +8,9 @@ on:
   schedule:
     - cron: '23 12 21 * *'
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: Lint Code Base
@@ -79,10 +82,29 @@ jobs:
         run: |
           pytest --suppress-no-test-exit-code
 
+  dependency-review:
+    needs:
+      - lint
+      - pytest
+
+    name: Dependency Review
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v2
+        with:
+          fail-on-severity: high
+          deny-licenses: AGPL-1.0-or-later
+
   analyze:
     needs:
       - lint
       - pytest
+      - dependency-review
 
     name: Analyze
     runs-on: ubuntu-latest
